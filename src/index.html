@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="converter.js"></script>
+    <link href="./twind.css" rel="stylesheet">
+    <title>Reaper Project -> osu! Converter</title>
+</head>
+
+<body class="bg-violet-200 container mx-auto items-center">
+    <div class="grid grid-cols-3  p-2 gap-6 h-screen justify-between">
+        <div class="flex-col bg-violet-300 rounded-md p-2 w-full col-span-2">
+            <h1 class="font-bold text-2xl text-violet-950 pb-2">Reaper Project -> osu!</h1>
+            <textarea name="output" id="output"
+                class="rounded-md bg-opacity-50 p-2 bg-white w-full h-5/6 resize-none form-textarea"
+                placeholder="0,727.72727,4,1,0,0"></textarea>
+
+        </div>
+        <div class="flex-col w-full rounded-md bg-transparent p-2">
+            <h2 class="font-semibold text-xl text-violet-900">Options</h2>
+            <div>
+                <h3 class="block mb-2 font-semibold text-violet-800">Project File</h3>
+                <input type="file" id="fileInput" onchange="convertTimingPoints()" accept=".RPP"
+                    class="block w-full rounded-lg cursor-pointer text-gray-300 border border-gray-600 bg-gray-700 focus:outline-none placeholder-gray-400 file:border-none file:bg-violet-600 file:text-gray-900 file:py-2 file:px-4 file:mr-4 file:hover:bg-violet-800 file:hover:text-white" />
+                <p class="mt-1 text-sm text-gray-800 font-light" id="file_input_help">RPP Only.</p>
+            </div>
+            <div>
+                <input type="checkbox" id="assume3rds"
+                    onchange="if(document.getElementById('fileInput').files.length > 0) convertTimingPoints();" checked
+                    class="form-checkbox w-4 h-4 text-violet-600 bg-violet-300 border-violet-700 rounded focus:ring-violet-500 ">
+                <label for="assume3rds" class="font-medium">Assume all X/8 time signatures are 3rds based</label>
+            </div>
+            <div>
+                <input type="number" id="globalOffset" value="0" step=".01"
+                    onchange="if(document.getElementById('fileInput').files.length > 0 && document.getElementById('globalOffset').value != '') convertTimingPoints();"
+                    class="form-input p-1 w-40 text-violet-600 bg-violet-300 border-violet-700 rounded focus:ring-violet-500 form">
+                <label for="globalOffset" class="font-thin">Global Offset</label>
+            </div>
+            <hr class="border-purple-950 rounded-lg my-2">
+            <div>
+                <div class="font-thin"><span class="font-bold" id="tempoMarkerNum">0</span> Tempo Markers, <span
+                        class="font-bold" id="timingPointNum">0</span> Timing points</div>
+                <button class="bg-violet-500 hover:bg-violet-900 text-white rounded-lg font-light my-2 p-1.5"
+                    id="copyToClipboardBTN" onclick="copyTimingPoints()">Copy to
+                    Clipboard</button>
+            </div>
+            <hr class="border-purple-950 rounded-lg my-2">
+            <div class="font-thin text-center">
+                <a class="text-violet-600 font-medium hover:underline" href="https://osu.ppy.sh/users/7279762">Coppertine</a> 2024 | Original: <a class="text-violet-600 font-medium hover:underline" href="https://osu.ppy.sh/users/6571670/">SaltyLucario</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

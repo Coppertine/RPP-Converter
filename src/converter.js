@@ -59,7 +59,8 @@ class ConvertUtils {
     }
 }
 
-const GLOBAL_OFFSET = 0; // original used -20ms
+let GLOBAL_OFFSET = 0; // original used -20ms
+let originalTempoPointNum = 0;
 
 function processReaperFile(fileText) {
     // console.log(fileText);
@@ -80,17 +81,22 @@ function processReaperFile(fileText) {
             // Asserting that first point ALWAYS has a time signature
             currTimeSig = parseInt(pointLine[3]);
         }
-        currentTimestamp = (currentTimestamp * 1000.0) - GLOBAL_OFFSET;
+        currentTimestamp = (currentTimestamp * 1000.0) + GLOBAL_OFFSET;
         // last 16 bits of timeSig is numerator
         let denominator = currTimeSig >> 16;
         let numerator = ((1 << 16) - 1) & currTimeSig;
         outputMarkers.push(new BeatMarker(currentTimestamp,bpm, numerator, denominator, linear))
+        originalTempoPointNum++;
     }
     return outputMarkers;
 }
 
-function convertTimingPoints(filePath) {
-     
+function convertTimingPoints() {
+    let filePath = document.getElementById("fileInput").files[0];
+    GLOBAL_OFFSET = parseInt(document.getElementById("globalOffset").value);
+    assumeOver8Always3s = document.getElementById("assume3rds").checked;
+    originalTempoPointNum = 0;
+
     let beatMarkers = [];
     const reader = new FileReader();
 
@@ -118,7 +124,7 @@ function addMissingMarkers(beatMarkers)
         let beatLength = 60000.0 / beatMarker.bpm;
         let measureFraction = beatMarker.numerator / beatMarker.denominator;
         let measureDuration = (measureFraction * 4) * beatLength;
-        console.log(`time: ${beatMarker.timestamp}, bpm: ${beatMarker.bpm}, timesig: ${beatMarker.numerator}/${beatMarker.denominator}, beatDuration: ${measureDuration}`);
+        // console.log(`time: ${beatMarker.timestamp}, bpm: ${beatMarker.bpm}, timesig: ${beatMarker.numerator}/${beatMarker.denominator}, beatDuration: ${measureDuration}`);
         let estimatedNextTimestamp = beatMarker.timestamp + measureDuration;
         if(i !== beatMarkers.length - 1)
         {
@@ -127,7 +133,7 @@ function addMissingMarkers(beatMarkers)
             while(estimatedNextTimestamp < nextBeatMarker.timestamp)
             {
                 let newBeatMarker = new BeatMarker(estimatedNextTimestamp,beatMarker.bpm,beatMarker.numerator,beatMarker.denominator,beatMarker.linear);
-                console.log(`Created new marker at ${estimatedNextTimestamp}`);
+                // console.log(`Created new marker at ${estimatedNextTimestamp}`);
                 // Experimental method.. may not work
                 beatMarkers = beatMarkers.toSpliced(currPointer-1, 0, newBeatMarker);
                 currPointer++;
@@ -174,6 +180,12 @@ function processBeatMarkers(beatMarkers)
         // document.body.appendChild(element);
     }
     document.getElementsByName("output")[0].value = outputString;
-    console.log(outputString);
+    document.getElementById("tempoMarkerNum").textContent = originalTempoPointNum;
+    document.getElementById("timingPointNum").textContent = beatMarkers.length;
+}
 
+function copyTimingPoints()
+{
+    navigator.clipboard.writeText(document.getElementById('output').value);
+    // TODO make a little toaster or 
 }
