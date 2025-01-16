@@ -18,19 +18,40 @@
                 placeholder="0,727.72727,4,1,0,0"></textarea>
 
         </div>
-        <div class="flex-col w-full rounded-md bg-transparent p-2">
+        <div class="grid grid-flow-row justify-self-start w-full rounded-md bg-transparent h-max">
             <h2 class="font-semibold text-xl text-violet-900">Options</h2>
+
+            <label class="font-semibold text-violet-800">Export Version</label>
+            <div class="my-2 w-max" id="dropdownContainer">
+                <div id="osuVersionSelector"
+                    class="relative rounded-md border border-violet-700 cursor-pointer justify-between flex bg-violet-300 hover:bg-violet-800 hover:text-gray-200 duration-100 group px-2 py-1 w-max z-[1]"
+                    onclick="toggleDropdown()">
+                    <span>osu!(lazer)</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 my-1 ml-2 group-hover:border-white duration-100">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                    </svg>
+                </div>
+                <div id="osuVersionOptions"
+                    class="opacity-0 absolute top-50 w-400 border border-violet-700 bg-white shadow-md transition-all duration-200 transform -translate-y-4 -z-[0]">
+                    <div class="py-2 px-4 cursor-pointer bg-violet-300 hover:bg-violet-500 duration-100" onclick="setVersion(0)">osu!(lazer)
+                    </div>
+                    <div class="py-2 px-4 cursor-pointer bg-violet-100 hover:bg-violet-500 duration-100" onclick="setVersion(1)">osu! stable
+                    </div>
+                </div>
+            </div>
+            <hr class="border-purple-950 rounded-lg my-2">
+
             <div>
                 <h3 class="block mb-2 font-semibold text-violet-800">Project File</h3>
                 <input type="file" id="fileInput" onchange="convertTimingPoints()" accept=".RPP"
-                    class="block w-full rounded-lg cursor-pointer text-gray-300 border border-gray-600 bg-gray-700 focus:outline-none placeholder-gray-400 file:border-none file:bg-violet-600 file:text-gray-900 file:py-2 file:px-4 file:mr-4 file:hover:bg-violet-800 file:hover:text-white" />
+                    class="block w-full rounded-lg cursor-pointer text-gray-300 border border-gray-600 bg-gray-700 focus:outline-none placeholder-gray-400 file:border-none file:bg-violet-600 file:text-gray-900 file:py-2 file:px-4 file:mr-4 file:hover:bg-violet-800 file:hover:hover:text-gray-200 file:duration-100" />
                 <p class="mt-1 text-sm text-gray-800 font-light" id="file_input_help">RPP Only.</p>
             </div>
             <div>
                 <input type="checkbox" id="assume3rds"
                     onchange="if(document.getElementById('fileInput').files.length > 0) convertTimingPoints();" checked
-                    class="form-checkbox w-4 h-4 text-violet-600 bg-violet-300 border-violet-700 rounded focus:ring-violet-500 ">
-                <label for="assume3rds" class="font-medium">Assume all X/8 time signatures are 3rds based</label>
+                    class="form-checkbox w-4 h-4 text-violet-600 bg-violet-300 border-violet-700 rounded focus:ring-violet-500 my-2">
+                <label for="assume3rds" class="font-thin">Assume all X/8 time signatures are 3rds based</label>
             </div>
             <div>
                 <input type="number" id="globalOffset" value="-15" step="0.01"
@@ -42,13 +63,17 @@
             <div>
                 <div class="font-thin"><span class="font-bold" id="tempoMarkerNum">0</span> Tempo Markers, <span
                         class="font-bold" id="timingPointNum">0</span> Timing points</div>
-                <button class="bg-violet-500 hover:bg-violet-900 text-white rounded-lg font-light my-2 p-1.5"
+                <button
+                    class="bg-violet-500 hover:bg-violet-900 text-white hover:text-gray-300 rounded-lg font-light my-2 p-1.5 duration-100"
                     id="copyToClipboardBTN" onclick="copyTimingPoints()">Copy to
                     Clipboard</button>
             </div>
             <hr class="border-purple-950 rounded-lg my-2">
             <div class="font-thin text-center">
-                <a class="text-violet-600 font-medium hover:underline" href="https://osu.ppy.sh/users/7279762">Coppertine</a> 2024 | Original: <a class="text-violet-600 font-medium hover:underline" href="https://osu.ppy.sh/users/6571670/">SaltyLucario</a>
+                <a class="text-violet-600 font-medium hover:underline"
+                    href="https://osu.ppy.sh/users/7279762">Coppertine</a> 2024 | Original: <a
+                    class="text-violet-600 font-medium hover:underline"
+                    href="https://osu.ppy.sh/users/6571670/">SaltyLucario</a>
             </div>
         </div>
     </div>
