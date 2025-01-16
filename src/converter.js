@@ -99,7 +99,7 @@ function processReaperFile(fileText) {
 
 function convertTimingPoints() {
     let filePath = document.getElementById("fileInput").files[0];
-    GLOBAL_OFFSET = parseInt(document.getElementById("globalOffset").value);
+    GLOBAL_OFFSET = parseFloat(document.getElementById("globalOffset").value);
     assumeOver8Always3s = document.getElementById("assume3rds").checked;
     originalTempoPointNum = 0;
 
