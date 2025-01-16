@@ -33,7 +33,7 @@
                 <label for="assume3rds" class="font-medium">Assume all X/8 time signatures are 3rds based</label>
             </div>
             <div>
-                <input type="number" id="globalOffset" value="0" step=".01"
+                <input type="number" id="globalOffset" value="-15" step="0.01"
                     onchange="if(document.getElementById('fileInput').files.length > 0 && document.getElementById('globalOffset').value != '') convertTimingPoints();"
                     class="form-input p-1 w-40 text-violet-600 bg-violet-300 border-violet-700 rounded focus:ring-violet-500 form">
                 <label for="globalOffset" class="font-thin">Global Offset</label>

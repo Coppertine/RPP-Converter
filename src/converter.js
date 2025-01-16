@@ -65,7 +65,7 @@ class ConvertUtils {
     }
 }
 
-let GLOBAL_OFFSET = 0; // original used -20ms
+let GLOBAL_OFFSET = -15; // original used -20ms
 let originalTempoPointNum = 0;
 
 function processReaperFile(fileText) {
