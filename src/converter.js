@@ -67,6 +67,7 @@ class ConvertUtils {
 
 let GLOBAL_OFFSET = -15; // original used -20ms
 let originalTempoPointNum = 0;
+let OUTPUT_VERSION = 0; // 0 - lazer, 1 - stable
 
 function processReaperFile(fileText) {
     // console.log(fileText);
@@ -173,6 +174,10 @@ function processBeatMarkers(beatMarkers)
             let beatCount = interval / beatLength;
             let predictedInterval = Math.round(beatCount * beatLength);
             omitBarLine = Math.round(previousBeatCount) !== 0;
+            if(OUTPUT_VERSION)
+            {
+                beatMarkers = adjustForStable(beatMarkers, predictedInterval, beatCount, i);
+            }
             beatCount += previousBeatCount;
             while(beatCount >= numerator)
                 beatCount -= numerator;
@@ -182,7 +187,7 @@ function processBeatMarkers(beatMarkers)
         bpm = beatMarker.bpm;
         beatLength = 60000.0/bpm;
         numerator = beatMarker.numerator;
-        outputString += `${currentTimestamp},${beatLength},${Math.ceil(numerator)},0,0,100,1,${omitBarLine ? 8 : 0}\n`;
+        outputString += `${OUTPUT_VERSION ? Math.round(currentTimestamp) : currentTimestamp},${beatLength},${Math.ceil(numerator)},0,0,100,1,${omitBarLine ? 8 : 0}\n`;
         // document.body.appendChild(element);
     }
     document.getElementsByName("output")[0].value = outputString;
@@ -190,8 +195,57 @@ function processBeatMarkers(beatMarkers)
     document.getElementById("timingPointNum").textContent = beatMarkers.length;
 }
 
+// STABLE Only, because of stable's nonsense on how timing is done, we have to adjust for "rounding errors" (it's more so truncating, but you get the point)
+function adjustForStable(beatMarkers, predictedInterval, beatCount, i)
+{
+    let bpm = beatMarkers[i].bpm;
+    let currentTimestamp = beatMarkers[i].timestamp;
+    let nextTimeStamp = beatMarkers[i+1].timestamp;
+    while(Math.round(currentTimestamp + predictedInterval) < Math.round(nextTimeStamp))
+    {
+        bpm -= 0.01;
+        predictedInterval = beatCount * (60000 / bpm);
+    }
+    while(Math.round(currentTimestamp + predictedInterval) > Math.round(nextTimeStamp))
+    {
+        bpm += 0.01;
+        predictedInterval = beatCount * (60000 / bpm);
+    }
+    beatMarkers[i].bpm = bpm;
+    return beatMarkers;
+}
+
+
 function copyTimingPoints()
 {
     navigator.clipboard.writeText(document.getElementById('output').value);
     // TODO make a little toaster or 
 }
+
+function toggleDropdown()
+{
+    document.getElementById("osuVersionOptions").classList.toggle("opacity-0");
+    document.getElementById("osuVersionOptions").classList.toggle("-translate-y-4");
+    document.querySelector("#osuVersionSelector svg").classList.toggle("-scale-y-[1]");
+}
+
+function setVersion(verNum)
+{
+    OUTPUT_VERSION = verNum;
+    document.querySelector("#osuVersionSelector span").textContent = document.getElementById("osuVersionOptions").children[verNum].textContent;
+    if(document.getElementById('fileInput').files.length > 0) convertTimingPoints();
+    toggleDropdown();
+}
+
+document.addEventListener("click", (e) => {
+    if(!document.getElementById("osuVersionOptions").classList.contains("opacity-0"))
+        {
+            var container = document.getElementById("dropdownContainer");
+
+            if(!container.contains(e.target))
+            {
+                toggleDropdown();
+            }
+        }
+});
+
