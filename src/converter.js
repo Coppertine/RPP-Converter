@@ -136,7 +136,7 @@ function addMissingMarkers(beatMarkers)
         {
             let currPointer = i+1;
             let nextBeatMarker = beatMarkers[currPointer];
-            while(estimatedNextTimestamp < nextBeatMarker.timestamp)
+            while(Math.round(estimatedNextTimestamp) < Math.round(nextBeatMarker.timestamp))
             {
                 let newBeatMarker = new BeatMarker(estimatedNextTimestamp,beatMarker.bpm,beatMarker.numerator,beatMarker.denominator,beatMarker.linear);
                 // console.log(`Created new marker at ${estimatedNextTimestamp}`);
