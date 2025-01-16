@@ -49,6 +49,12 @@ class BeatMarker {
             this.denominator /= 3;
             this.bpm /= 0.666;
         }
+        if(this.denominator == 24)
+        {
+            this.numerator /= 3;
+            this.denominator /= 6;
+            this.bpm /= 0.666;
+        }
     }
 }
 
