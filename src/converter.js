@@ -67,7 +67,7 @@ class ConvertUtils {
 
 let GLOBAL_OFFSET = -15; // original used -20ms
 let originalTempoPointNum = 0;
-let OUTPUT_VERSION = 0; // 0 - lazer, 1 - stable
+let OUTPUT_VERSION = 0; // 0 - lazer, 1 - stable, 2 - TypoJam (beta)
 
 function processReaperFile(fileText) {
     // console.log(fileText);
@@ -174,7 +174,7 @@ function processBeatMarkers(beatMarkers)
             let beatCount = interval / beatLength;
             let predictedInterval = Math.round(beatCount * beatLength);
             omitBarLine = Math.round(previousBeatCount) !== 0;
-            if(OUTPUT_VERSION)
+            if(OUTPUT_VERSION == 1) // stable
             {
                 beatMarkers = adjustForStable(beatMarkers, predictedInterval, beatCount, i);
             }
@@ -187,10 +187,11 @@ function processBeatMarkers(beatMarkers)
         bpm = beatMarker.bpm;
         beatLength = 60000.0/bpm;
         numerator = beatMarker.numerator;
-        outputString += `${OUTPUT_VERSION ? Math.round(currentTimestamp) : currentTimestamp},${beatLength},${Math.ceil(numerator)},0,0,100,1,${omitBarLine ? 8 : 0}\n`;
+        outputString += GetOutputString(currentTimestamp, beatLength, Math.ceil(numerator), omitBarLine);
+        // outputString += `${OUTPUT_VERSION ? Math.round(currentTimestamp) : currentTimestamp},${beatLength},${Math.ceil(numerator)},0,0,100,1,${omitBarLine ? 8 : 0}\n`;
         // document.body.appendChild(element);
     }
-    document.getElementsByName("output")[0].value = outputString;
+    document.getElementsByName("output")[0].value = OUTPUT_VERSION == 2 ? outputString.substring(1) : outputString;
     document.getElementById("tempoMarkerNum").textContent = originalTempoPointNum;
     document.getElementById("timingPointNum").textContent = beatMarkers.length;
 }
@@ -215,6 +216,18 @@ function adjustForStable(beatMarkers, predictedInterval, beatCount, i)
     return beatMarkers;
 }
 
+function GetOutputString(currentTimestamp, beatLength, numerator, omitBarLine)
+{
+    switch (OUTPUT_VERSION) {
+        case 2: // TypoJam
+            return `,{\n\t"n":"bpm",\n\t"t":${currentTimestamp / 1000},\n\t"d":{\n\t\t"b":${60000.0 / beatLength},\n\t\t"s":${numerator}\n\t}\n}`;
+        case 1: // Stable
+            return `${Math.round(currentTimestamp)},${beatLength},${numerator},0,0,100,1,${omitBarLine?8:0}\n`; 
+        case 0: // lazer, default
+            return `${currentTimestamp},${beatLength},${numerator},0,0,100,1,${omitBarLine ? 8 : 0}\n`;
+    }
+}
+
 
 function copyTimingPoints()
 {
@@ -224,6 +237,7 @@ function copyTimingPoints()
 
 function toggleDropdown()
 {
+    document.getElementById("osuVersionOptions").classList.toggle("invisible");
     document.getElementById("osuVersionOptions").classList.toggle("opacity-0");
     document.getElementById("osuVersionOptions").classList.toggle("-translate-y-4");
     document.querySelector("#osuVersionSelector svg").classList.toggle("-scale-y-[1]");
