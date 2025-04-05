@@ -46,14 +46,18 @@
             <div>
                 <h3 class="block mb-2 font-semibold text-violet-800">Project File</h3>
                 <input type="file" id="fileInput" onchange="convertTimingPoints()" accept=".RPP"
-                    class="block w-full rounded-lg cursor-pointer text-gray-300 border border-gray-600 bg-gray-700 focus:outline-none placeholder-gray-400 file:border-none file:bg-violet-600 file:text-gray-900 file:py-2 file:px-4 file:mr-4 file:hover:bg-violet-800 file:hover:hover:text-gray-200 file:duration-100" />
-                <p class="mt-1 text-sm text-gray-800 font-light" id="file_input_help">RPP Only.</p>
+                    class="block w-full rounded-lg cursor-pointer text-gray-300 border border-gray-600 bg-gray-700 focus:outline-none placeholder-gray-400 file:border-none file:bg-violet-600 file:text-white file:py-2 file:px-4 file:mr-4 file:hover:bg-violet-800 file:hover:text-gray-300 file:duration-100" />
+                <p class="mt-1 text-sm text-gray-800 font-light" id="file_input_help">.RPP (Reaper Project File) Only.</p>
             </div>
             <div>
                 <input type="checkbox" id="assume3rds"
                     onchange="if(document.getElementById('fileInput').files.length > 0) convertTimingPoints();" checked
-                    class="form-checkbox w-4 h-4 text-violet-600 bg-violet-300 border-violet-700 rounded focus:ring-violet-500 my-2">
-                <label for="assume3rds" class="font-thin">Assume all X/8 time signatures are 3rds based</label>
+                    class="cursor-pointer form-checkbox w-4 h-4 text-violet-600 bg-violet-300 border-violet-700 rounded focus:ring-violet-500 my-2">
+                <label for="assume3rds" class="cursor-pointer group font-thin no-underline border-dotted border-b border-black">Assume all #/8 time signatures are 3rds based
+                    <div class="invisible opacity-0 absolute translate-y-1 translate-x-5 w-[28rem] cursor-text selection:bg-violet-600 selection:text-white text-slate-200 drop-shadow-md bg-slate-500 border-2 rounded-md border-slate-700 px-3 py-1 group-hover:visible group-hover:opacity-100 transition-all duration-200">
+                        Assumes all #/8 (i.e. 7/8, 5/8, 12/8) time signatures can divide the bpm into thirds (i.e. 120bpm 6/8 -> 80bpm 2/4). If disabled, the bpm is kept the same.
+                    </div>
+                </label>
             </div>
             <div>
                 <input type="number" id="globalOffset" value="-15" step="0.01"
