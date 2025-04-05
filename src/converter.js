@@ -30,7 +30,7 @@ class BeatMarker {
     // Used to change 6/8 and stuff like X/12, X/24, X/(number that is a power of 2) and isn't X/4
     convertTimeSignature() {
         if (this.numerator % 3 === 0 && this.denominator === 8) {
-            if (this.numerator !== 6 && !assumeOver8Always3s) return;
+            if (!assumeOver8Always3s) return;
 
             this.numerator /= 3;
             this.denominator = 4;
